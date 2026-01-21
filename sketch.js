@@ -123,9 +123,9 @@ let showTutorialOverlay = false;
 
 const TUTORIAL_LINES = [
   "CLICK / TAP to shoot the boats",
+  "Each boat takes 3 hits to sink",
   "Ammo is limited — every shot counts",
   "Sink 4 boats to advance to the next level",
-  "Boats get faster as you level up",
   "Tap/Click to start"
 ];
 
@@ -416,10 +416,11 @@ function drawGameOver() {
   // ✅ NEW COPY (2 lines)
   pg.textSize(16);
   pg.fill(255, 220, 0);
-  if (gameOverReason === "OUT_OF_AMMO") {
-    pg.text("Madison Cawthorn: Great shooting!", BASE_W / 2, BASE_H * 0.375);
-    pg.text("You've saved thousands of Americans from deadly poison!", BASE_W / 2, BASE_H * 0.405);
-  }
+ if (gameOverReason === "OUT_OF_AMMO") {
+  pg.text("\"Madison Cawthorn: Great shooting!", BASE_W / 2, BASE_H * 0.375);
+  pg.text("You've saved thousands of Americans from deadly poison!\"", BASE_W / 2, BASE_H * 0.405);
+}
+
 
   pg.textSize(18);
   pg.fill(255, 220, 0);
