@@ -43,7 +43,7 @@ function getPlayBottomY() {
 }
 
 // ---- Lead gen ----
-const LEAD_DEBUG = true;
+const LEAD_DEBUG = false;
 
 // ✅ YOUR CORRECTED LEAD_LAYOUT
 let LEAD_LAYOUT = {
