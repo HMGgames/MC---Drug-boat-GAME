@@ -6,6 +6,7 @@
     ✅ Try auto-start MAIN MENU music on load (will work only when browser allows autoplay)
     ✅ Lead gen click-to-focus exact field (X+Y box hit test)
     ✅ NEW: Game Over message copy (2 lines) replacing "YOU RAN OUT OF AMMO"
+    ✅ NEW: Tutorial overlay on first gameplay start (session-only)
     ✅ Everything else unchanged from your v0.7.2 baseline
 
   IMPORTANT:
@@ -113,6 +114,20 @@ let leaderboard = [];
 let globalTop10 = [];
 let globalLBLoading = false;
 let globalLBLastFetchMs = 0;
+
+// ----------------------------------------------------
+// Tutorial overlay (session-only)
+// ----------------------------------------------------
+let tutorialSeenThisSession = false;
+let showTutorialOverlay = false;
+
+const TUTORIAL_LINES = [
+  "CLICK / TAP to shoot the boats",
+  "Ammo is limited — every shot counts",
+  "Sink 4 boats to advance to the next level",
+  "Boats get faster as you level up",
+  "Tap/Click to start"
+];
 
 // ----------------------------------------------------
 // Preload
@@ -363,6 +378,8 @@ function drawPlaying() {
   effects.draw(pg);
   popups.draw(pg);
   drawHUD();
+
+  if (showTutorialOverlay) drawTutorialOverlay();
 }
 
 function drawStartScreen() {
@@ -410,6 +427,44 @@ function drawGameOver() {
   pg.text(`TAP TO PLAY AGAIN`, BASE_W / 2, BASE_H * 0.54);
 
   drawLeaderboardPanel();
+}
+
+// ----------------------------------------------------
+// Tutorial overlay drawing
+// ----------------------------------------------------
+function drawTutorialOverlay() {
+  pg.push();
+
+  pg.noStroke();
+  pg.fill(0, 200);
+  pg.rect(0, 0, BASE_W, BASE_H);
+
+  const cardW = 1120;
+  const cardH = 360;
+  const x = (BASE_W - cardW) / 2;
+  const y = (BASE_H - cardH) / 2;
+
+  pg.fill(0, 180);
+  pg.rect(x, y, cardW, cardH, 18);
+
+  pg.textFont(fontPressStart);
+  pg.textAlign(CENTER, TOP);
+
+  pg.fill(255);
+  pg.textSize(28);
+  pg.text("HOW TO PLAY", BASE_W / 2, y + 34);
+
+  pg.textSize(16);
+  pg.fill(255, 220, 0);
+
+  const startY = y + 110;
+  const lineH = 34;
+
+  for (let i = 0; i < TUTORIAL_LINES.length; i++) {
+    pg.text(TUTORIAL_LINES[i], BASE_W / 2, startY + i * lineH);
+  }
+
+  pg.pop();
 }
 
 // ----------------------------------------------------
@@ -563,6 +618,11 @@ function setState(next) {
   if (gameState === next) return;
   gameState = next;
   syncMusicToState();
+
+  // ✅ tutorial: show once per session when gameplay starts
+  if (gameState === STATE.PLAYING && !tutorialSeenThisSession) {
+    showTutorialOverlay = true;
+  }
 }
 
 // ----------------------------------------------------
@@ -599,6 +659,13 @@ function handlePrimaryPress(sx, sy) {
   }
 
   if (gameState !== STATE.PLAYING) return;
+
+  // ✅ tutorial consumes first tap/click so we don't shoot immediately
+  if (showTutorialOverlay) {
+    showTutorialOverlay = false;
+    tutorialSeenThisSession = true;
+    return;
+  }
 
   if (y > getHudTopYWorld()) return;
   if (ammo <= 0) return;
@@ -1218,8 +1285,15 @@ async function onSubmitLead() {
 }
 
 // ----------------------------------------------------
-// Initial music state
+// Initial music state + tutorial keyboard close
 // ----------------------------------------------------
-function keyPressed() { unlockAudioOnce(); }
+function keyPressed() {
+  unlockAudioOnce();
+  if (gameState === STATE.PLAYING && showTutorialOverlay) {
+    showTutorialOverlay = false;
+    tutorialSeenThisSession = true;
+  }
+}
+
 function mouseClicked() { unlockAudioOnce(); }
 setTimeout(() => syncMusicToState(), 0);
