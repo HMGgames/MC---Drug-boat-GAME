@@ -1,11 +1,12 @@
-/*  SINK THE DRUG BOATS (P5) — v0.7.2 (GLOBAL Top10 + UX patches)
+/*  SINK THE DRUG BOATS (P5) — v0.7.3 (GLOBAL Top10 + UX patches + new GAME OVER copy)
     ✅ GLOBAL Top10 leaderboard via your Apps Script (JSONP)
     ✅ Optimistic leaderboard update (player sees score immediately)
     ✅ Re-fetch leaderboard after 1.2s to avoid Sheets propagation delay
     ✅ Highlight current player in leaderboard (by email)
     ✅ Try auto-start MAIN MENU music on load (will work only when browser allows autoplay)
     ✅ Lead gen click-to-focus exact field (X+Y box hit test)
-    ✅ Everything else unchanged from your v0.7.1 baseline
+    ✅ NEW: Game Over message copy (2 lines) replacing "YOU RAN OUT OF AMMO"
+    ✅ Everything else unchanged from your v0.7.2 baseline
 
   IMPORTANT:
   - You MUST include p5.sound in your HTML (p5.sound.min.js) or sounds won't work.
@@ -395,13 +396,16 @@ function drawGameOver() {
   pg.textSize(44);
   pg.text("GAME OVER", BASE_W / 2, BASE_H * 0.30);
 
-  pg.textSize(18);
+  // ✅ NEW COPY (2 lines)
+  pg.textSize(16);
   pg.fill(255, 220, 0);
   if (gameOverReason === "OUT_OF_AMMO") {
-    pg.text("YOU RAN OUT OF AMMO", BASE_W / 2, BASE_H * 0.38);
+    pg.text("Madison Cawthorn: Great shooting!", BASE_W / 2, BASE_H * 0.375);
+    pg.text("You've saved thousands of Americans from deadly poison!", BASE_W / 2, BASE_H * 0.405);
   }
 
   pg.textSize(18);
+  pg.fill(255, 220, 0);
   pg.text(`SCORE ${score}`, BASE_W / 2, BASE_H * 0.46);
   pg.text(`TAP TO PLAY AGAIN`, BASE_W / 2, BASE_H * 0.54);
 
@@ -500,10 +504,8 @@ function drawHUD() {
   pg.textAlign(LEFT, CENTER);
   pg.noStroke();
 
-  // ✅ Set as future default
   pg.textSize(26);
 
-  // ✅ YOUR CORRECTED HUD POSITIONS
   drawHUDText(String(ammo),  x + w * 0.10, y + h * 0.40);
   drawHUDText(String(level), x + w * 0.62, y + h * 0.40);
   drawHUDText(String(score), x + w * 0.79, y + h * 0.55);
@@ -971,7 +973,7 @@ function fetchGlobalTop10JSONP(force = false) {
 }
 
 // ----------------------------------------------------
-// Lead Gen (DOM) — only change: click-to-focus uses X+Y box hit test
+// Lead Gen (DOM) — click-to-focus uses X+Y box hit test
 // ----------------------------------------------------
 let leadOverlay, leadCard;
 let leadFirst, leadLast, leadEmail;
@@ -1070,7 +1072,6 @@ function initLeadGenUI() {
     if (inBox(LEAD_LAYOUT.last))  { leadLast.elt.focus();  return; }
     if (inBox(LEAD_LAYOUT.email)) { leadEmail.elt.focus(); return; }
 
-    // fallback: nearest vertical
     if (yPct < LEAD_LAYOUT.last.top) leadFirst.elt.focus();
     else if (yPct < LEAD_LAYOUT.email.top) leadLast.elt.focus();
     else leadEmail.elt.focus();
