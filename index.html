@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <title>Sink the Drug Boats</title>
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        touch-action: none;
+      }
+
+      canvas {
+        display: block;
+      }
+
+      /* =========================
+         ROTATE DEVICE OVERLAY
+         ========================= */
+      #rotateOverlay {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        color: #fff;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        text-align: center;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+
+      #rotateOverlay .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        padding: 24px;
+      }
+
+      #rotateIcon {
+        font-size: 64px;
+        transform: rotate(90deg);
+      }
+
+      #rotateText {
+        font-size: 20px;
+        line-height: 1.3;
+        opacity: 0.9;
+      }
+
+      /* Show overlay ONLY on mobile + portrait */
+      @media (orientation: portrait) and (max-width: 900px) {
+        #rotateOverlay {
+          display: flex;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ROTATE DEVICE OVERLAY -->
+    <div id="rotateOverlay">
+      <div class="content">
+        <div id="rotateIcon">📱</div>
+        <div id="rotateText">
+          Please rotate your device<br />
+          to play in landscape mode
+        </div>
+      </div>
+    </div>
+
+    <!-- p5 core -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
+
+    <!-- p5 sound (adds loadSound) -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/addons/p5.sound.min.js"></script>
+
+    <!-- p5 DOM (createDiv/createInput/etc.) -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/addons/p5.dom.min.js"></script>
+
+    <!-- Game -->
+    <script src="sketch.js"></script>
+  </body>
+</html>
