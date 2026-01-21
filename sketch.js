@@ -417,8 +417,8 @@ function drawGameOver() {
   pg.textSize(16);
   pg.fill(255, 220, 0);
  if (gameOverReason === "OUT_OF_AMMO") {
-  pg.text("\"Madison Cawthorn: Great shooting!", BASE_W / 2, BASE_H * 0.375);
-  pg.text("You've saved thousands of Americans from deadly poison!\"", BASE_W / 2, BASE_H * 0.405);
+  pg.text('Madison Cawthorn: "Great shooting!', BASE_W / 2, BASE_H * 0.375);
+pg.text('You\'ve saved thousands of Americans from deadly poison!"', BASE_W / 2, BASE_H * 0.405);
 }
 
 
